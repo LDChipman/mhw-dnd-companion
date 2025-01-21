@@ -1,76 +1,110 @@
 import { damageTypes } from "../enums";
-import { Hitzone } from "./Hitzone";
+
+type Hitzone = {
+	type: damageTypes;
+	hitzoneModifier: number;
+	minimumDamage: number;
+}
 
 class MonsterPart {
 
 	//General Info
-	public name: string = "Default Name";
-	public id: string = "0000-0000-0000-0000";
-
+	public name: string;
+	public id: string;
 	//Part Break Info
-	private partBreakThresholdMax: number;
-	private partBreakThreshholdCurrent: number;
+	private partBreakThreshold: number;
 	private timesPartCanBeBroken: number;
 	private timesPartHasBeenBroken: number;
+	private damageTaken: number;
 
-	private hitzones: Array<Hitzone> = [];
+	private hitzones: Array<Hitzone>;
 
-	constructer(name: string, id: string, partBreakThresholdMax: number, partBreakThreshholdCurrent: number, timesPartCanBeBroken: number, timesPartHasBeenBroken: number, hitzones: Array<Hitzone>) {
+	get getTimesPartHasBeenBroken(): number {
+		return this.timesPartHasBeenBroken;
+	}
+
+	constructor(name: string, id: string, partBreakThreshold: number, timesPartCanBeBroken: number, timesPartHasBeenBroken: number, hitzones: Array<Hitzone>) {
 
 		this.name = name;
 		this.id = id;
 
-		this.partBreakThresholdMax = partBreakThresholdMax;
-		this.partBreakThreshholdCurrent = partBreakThreshholdCurrent;
+		this.partBreakThreshold = partBreakThreshold;
 		this.timesPartCanBeBroken = timesPartCanBeBroken;
 		this.timesPartHasBeenBroken = timesPartHasBeenBroken;
+		this.damageTaken = 0;
 
-		Object.values(damageTypes).forEach(damageType => {
+		this.hitzones = [];
 
-			let hasHitzoneOfDamageType = hitzones.filter((hitzone) => hitzone.type == damageType).length > 0;
-			let hasMultipleHitzonesOfSameType = hitzones.filter((hitzone) => hitzone.type == damageType).length > 1;
+		Object.values(damageTypes).forEach(currentDamageType => {
 
-			if (!hasHitzoneOfDamageType) {
-				console.log(`Given Array of Hitzones does not contain hitzone of type ${damageType}`);
-				console.log(`Adding new hitzone of type ${damageType} with default values for Hitzone Modifier and Minimum Damage`);
+			const HAS_HITZONE_OF_DAMAGE_TYPE = hitzones.filter((hitzone) => hitzone.type == currentDamageType).length > 0;
+			const HAS_MULTIPLE_HITZONES_OF_SAME_TYPE = hitzones.filter((hitzone) => hitzone.type == currentDamageType).length > 1;
 
-				this.hitzones.push(new Hitzone(damageType, 0, 0));
+			if (!HAS_HITZONE_OF_DAMAGE_TYPE) {
+				console.log(`Given Array of Hitzones does not contain hitzone of type ${currentDamageType}`);
+				console.log(`Adding new Hitzone of type ${currentDamageType} with default values for Hitzone Modifier and Minimum Damage`);
+
+				const NEW_HITZONE: Hitzone = { type: currentDamageType, hitzoneModifier: 0, minimumDamage: 0 };
+
+				this.hitzones.push(NEW_HITZONE);
 				return;
 			}
 
-			if (hasMultipleHitzonesOfSameType) {
-				let hitzone = hitzones.filter((hitzone) => hitzone.type == damageType).at(0);
-				console.log(`Given array contains multiple hitzones of type ${damageType} values from the first instance in the array will be used and the rest will be ignored`);
-				console.log(`Adding new hitzone of type ${damageType} with Hitzone Modifier ${hitzone?.hitzoneModifier} and minimum damage of ${hitzone?.minimumDamage}`)
+			if (HAS_MULTIPLE_HITZONES_OF_SAME_TYPE) {
+				const HITZONE = hitzones.filter((hitzone) => hitzone.type == currentDamageType).at(0);
+				console.log(`Given array contains multiple hitzones of type ${currentDamageType} values from the first instance in the array will be used and the rest will be ignored`);
+				console.log(`Adding new hitzone of type ${currentDamageType} with Hitzone Modifier ${HITZONE?.hitzoneModifier} and minimum damage of ${HITZONE?.minimumDamage}`)
 
-				this.hitzones.push(new Hitzone(damageType, hitzone?.hitzoneModifier, hitzone?.minimumDamage));
+				const NEW_HITZONE: Hitzone = { type: currentDamageType, hitzoneModifier: HITZONE!.hitzoneModifier, minimumDamage: HITZONE!.hitzoneModifier };
+
+				this.hitzones.push(NEW_HITZONE);
 				return;
 			}
 
-			let hitzone = hitzones.filter((hitzone) => hitzone.type == damageType).at(0);
-			this.hitzones.push(new Hitzone(damageType, hitzone?.hitzoneModifier, hitzone?.minimumDamage));
+			const HITZONE = hitzones.filter((hitzone) => hitzone.type == currentDamageType).at(0);
+			const NEW_HITZONE: Hitzone = { type: currentDamageType, hitzoneModifier: HITZONE!.hitzoneModifier, minimumDamage: HITZONE!.minimumDamage };
+			this.hitzones.push(NEW_HITZONE);
 
 		}
 		)
 
 	}
 
-	//Takes in the raw damage dealt to the part and the damage type, adjusts the damage for the hitzone value of the part, and returns the adjusted damage to the caller.
-	public applyDamageToPart(rawDamage: number, damageType: damageTypes): number {
+	//Use to get damage number adjusted against the relevant hitzone 
+	public adjustDamageForHitzone(rawDamage: number, damageType: damageTypes): number {
 
-		let hitzone = this.hitzones.filter((hitzone) => hitzone.type == damageType).at(0);
+		const HITZONE = this.hitzones.filter((hitzone) => hitzone.type == damageType).at(0);
+		const ADJUSTED_DAMAGE = rawDamage - HITZONE.hitzoneModifier;
 
-		if (hitzone == undefined) {
+		if (HITZONE == undefined) {
 			console.log(`Didn't find hitzone of type ${damageType}`);
 			console.log("Returning raw damage to caller");
 
 			return rawDamage;
 		}
 
-		let adjustedDamage = rawDamage - hitzone?.hitzoneModifier;
-		return adjustedDamage >= hitzone?.minimumDamage ? adjustedDamage : hitzone?.minimumDamage;
+		return ADJUSTED_DAMAGE >= HITZONE.minimumDamage ? ADJUSTED_DAMAGE : HITZONE.minimumDamage;
 
 	}
 
+	//Use to apply damage to the part and automatically increment the number of times a part has been broken
+	public applyDamageToPart(damage: number): void {
+
+		this.damageTaken += damage;
+		this.checkForPartBreak();
+
+	}
+
+	//Use to check if the current damage taken is enough to reach the part break threshold
+	private checkForPartBreak(): void {
+
+		const PART_CAN_BE_BROKEN = this.timesPartHasBeenBroken < this.timesPartCanBeBroken;
+		if (PART_CAN_BE_BROKEN && this.damageTaken >= this.partBreakThreshold) {
+			this.timesPartHasBeenBroken += 1;
+			this.partBreakThreshold *= 2;
+			this.checkForPartBreak();
+		}
+
+	}
 
 }
