@@ -53,7 +53,7 @@ class MonsterPart {
 			if (HAS_MULTIPLE_HITZONES_OF_SAME_TYPE) {
 				const HITZONE = hitzones.filter((hitzone) => hitzone.type == currentDamageType).at(0);
 				console.log(`Given array contains multiple hitzones of type ${currentDamageType} values from the first instance in the array will be used and the rest will be ignored`);
-				console.log(`Adding new hitzone of type ${currentDamageType} with Hitzone Modifier ${HITZONE?.hitzoneModifier} and minimum damage of ${HITZONE?.minimumDamage}`)
+				console.log(`Adding new hitzone of type ${currentDamageType} with Hitzone Modifier ${HITZONE!.hitzoneModifier} and minimum damage of ${HITZONE!.minimumDamage}`)
 
 				const NEW_HITZONE: Hitzone = { type: currentDamageType, hitzoneModifier: HITZONE!.hitzoneModifier, minimumDamage: HITZONE!.hitzoneModifier };
 
@@ -74,7 +74,6 @@ class MonsterPart {
 	public adjustDamageForHitzone(rawDamage: number, damageType: damageTypes): number {
 
 		const HITZONE = this.hitzones.filter((hitzone) => hitzone.type == damageType).at(0);
-		const ADJUSTED_DAMAGE = rawDamage - HITZONE.hitzoneModifier;
 
 		if (HITZONE == undefined) {
 			console.log(`Didn't find hitzone of type ${damageType}`);
@@ -82,6 +81,8 @@ class MonsterPart {
 
 			return rawDamage;
 		}
+
+		const ADJUSTED_DAMAGE = rawDamage - HITZONE.hitzoneModifier;
 
 		return ADJUSTED_DAMAGE >= HITZONE.minimumDamage ? ADJUSTED_DAMAGE : HITZONE.minimumDamage;
 
