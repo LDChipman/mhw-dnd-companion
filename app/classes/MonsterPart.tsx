@@ -39,7 +39,7 @@ class MonsterPart {
 	}
 
 	//Use to construct new MonsterParts with guaranteed properly initialized fields
-	public static = class MonsterPartBuilder {
+	public static Builder = class {
 
 		private name: string;
 		private id: string;
