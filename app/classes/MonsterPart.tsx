@@ -1,4 +1,5 @@
 import { damageTypes } from "../enums";
+import { PartBreakNotifier } from "./PartBreakNotifier";
 
 type Hitzone = {
 	type: damageTypes;
@@ -19,11 +20,13 @@ class MonsterPart {
 
 	private hitzones: Array<Hitzone>;
 
+	private partBreakNotifier: PartBreakNotifier;
+
 	get getTimesPartHasBeenBroken(): number {
 		return this.timesPartHasBeenBroken;
 	}
 
-	private constructor(name: string, id: string, partBreakThreshold: number, timesPartCanBeBroken: number, timesPartHasBeenBroken: number, damageTaken: number, hitzones: Array<Hitzone>) {
+	private constructor(name: string, id: string, partBreakThreshold: number, timesPartCanBeBroken: number, timesPartHasBeenBroken: number, damageTaken: number, hitzones: Array<Hitzone>, partBreakNotifier: PartBreakNotifier) {
 
 		this.name = name;
 		this.id = id;
@@ -35,6 +38,7 @@ class MonsterPart {
 
 		this.hitzones = hitzones;
 
+		this.partBreakNotifier = partBreakNotifier;
 
 	}
 
@@ -50,6 +54,8 @@ class MonsterPart {
 		private damageTaken: number;
 
 		private hitzones: Array<Hitzone>;
+
+		private partBreakNotifier: PartBreakNotifier;
 
 		constructor() {
 			this.name = "Example Name";
@@ -71,10 +77,12 @@ class MonsterPart {
 			}
 			)
 
+			this.partBreakNotifier = new PartBreakNotifier();
+
 		}
 
 		public build() {
-			return new MonsterPart(this.name, this.id, this.partBreakThreshold, this.timesPartCanBeBroken, this.timesPartHasBeenBroken, this.damageTaken, this.hitzones);
+			return new MonsterPart(this.name, this.id, this.partBreakThreshold, this.timesPartCanBeBroken, this.timesPartHasBeenBroken, this.damageTaken, this.hitzones, this.partBreakNotifier);
 		}
 
 		public setName(name: string) {
@@ -137,6 +145,10 @@ class MonsterPart {
 
 			}
 			)
+		}
+
+		public setPartBreakNotifier(partBreakNotifier: PartBreakNotifier) {
+			this.partBreakNotifier = partBreakNotifier;
 		}
 
 	}
