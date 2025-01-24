@@ -1,26 +1,26 @@
-import { damageTypes } from "../enums";
+import { damageTypes } from "./../enums";
 import { PartBreakNotifier } from "./PartBreakNotifier";
 
-type Hitzone = {
+export type Hitzone = {
 	type: damageTypes;
 	hitzoneModifier: number;
 	minimumDamage: number;
 }
 
-class MonsterPart {
+export class MonsterPart {
 
 	//General Info
-	public name: string;
-	public id: string;
+	public readonly name: string;
+	public readonly id: string;
 	//Part Break Info
-	private partBreakThreshold: number;
-	private timesPartCanBeBroken: number;
-	private timesPartHasBeenBroken: number;
-	private damageTaken: number;
+	public readonly partBreakThreshold: number;
+	public readonly timesPartCanBeBroken: number;
+	public readonly timesPartHasBeenBroken: number;
+	public readonly damageTaken: number;
 
-	private hitzones: Array<Hitzone>;
+	public readonly hitzones: Array<Hitzone>;
 
-	private partBreakNotifier: PartBreakNotifier;
+	public readonly partBreakNotifier: PartBreakNotifier;
 
 	get getTimesPartHasBeenBroken(): number {
 		return this.timesPartHasBeenBroken;
@@ -85,6 +85,31 @@ class MonsterPart {
 			return new MonsterPart(this.name, this.id, this.partBreakThreshold, this.timesPartCanBeBroken, this.timesPartHasBeenBroken, this.damageTaken, this.hitzones, this.partBreakNotifier);
 		}
 
+		public reset() {
+
+			this.name = "Example Name";
+			this.id = "0000-0000-0000-0000";
+
+			this.partBreakThreshold = 0;
+			this.timesPartCanBeBroken = 0;
+			this.timesPartHasBeenBroken = 0;
+			this.damageTaken = 0;
+
+			this.hitzones = [];
+
+			Object.values(damageTypes).forEach(currentDamageType => {
+
+				const NEW_HITZONE: Hitzone = { type: currentDamageType, hitzoneModifier: 0, minimumDamage: 0 };
+
+				this.hitzones.push(NEW_HITZONE);
+
+			}
+			)
+
+			this.partBreakNotifier = new PartBreakNotifier();
+
+		}
+
 		public setName(name: string) {
 			this.name = name;
 		}
@@ -133,7 +158,7 @@ class MonsterPart {
 					console.log(`Given array contains multiple hitzones of type ${currentDamageType} values from the first instance in the array will be used and the rest will be ignored`);
 					console.log(`Adding new hitzone of type ${currentDamageType} with Hitzone Modifier ${HITZONE!.hitzoneModifier} and minimum damage of ${HITZONE!.minimumDamage}`)
 
-					const NEW_HITZONE: Hitzone = { type: currentDamageType, hitzoneModifier: HITZONE!.hitzoneModifier, minimumDamage: HITZONE!.hitzoneModifier };
+					const NEW_HITZONE: Hitzone = { type: currentDamageType, hitzoneModifier: HITZONE!.hitzoneModifier, minimumDamage: HITZONE!.minimumDamage };
 
 					this.hitzones.push(NEW_HITZONE);
 					return;
@@ -165,7 +190,7 @@ class MonsterPart {
 			return rawDamage;
 		}
 
-		const ADJUSTED_DAMAGE = rawDamage - HITZONE.hitzoneModifier;
+		const ADJUSTED_DAMAGE = rawDamage + HITZONE.hitzoneModifier;
 
 		return ADJUSTED_DAMAGE >= HITZONE.minimumDamage ? ADJUSTED_DAMAGE : HITZONE.minimumDamage;
 
@@ -186,6 +211,7 @@ class MonsterPart {
 		if (PART_CAN_BE_BROKEN && this.damageTaken >= this.partBreakThreshold) {
 			this.timesPartHasBeenBroken += 1;
 			this.partBreakThreshold *= 2;
+			this.partBreakNotifier.notify();
 			this.checkForPartBreak();
 		}
 
