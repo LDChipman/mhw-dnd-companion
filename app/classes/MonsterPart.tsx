@@ -1,29 +1,52 @@
-import { damageTypes } from "./../enums";
+import { damageTypes, Hitzone, generateHitzonesFromArray, generateDefaultHitzones } from "./Hitzone";
 import { PartBreakNotifier } from "./PartBreakNotifier";
-
-export type Hitzone = {
-	type: damageTypes;
-	hitzoneModifier: number;
-	minimumDamage: number;
-}
 
 export class MonsterPart {
 
 	//General Info
-	public readonly name: string;
-	public readonly id: string;
+	private name: string;
+	private id: string;
+
 	//Part Break Info
-	public readonly partBreakThreshold: number;
-	public readonly timesPartCanBeBroken: number;
-	public readonly timesPartHasBeenBroken: number;
-	public readonly damageTaken: number;
+	private partBreakThreshold: number;
+	private timesPartCanBeBroken: number;
+	private timesPartHasBeenBroken: number;
+	private damageTaken: number;
 
-	public readonly hitzones: Array<Hitzone>;
+	private hitzones: Array<Hitzone>;
 
-	public readonly partBreakNotifier: PartBreakNotifier;
+	private partBreakNotifier: PartBreakNotifier;
+
+	get getName(): string {
+		return this.name;
+	}
+
+	get getId(): string {
+		return this.id;
+	}
+
+	get getPartBreakThreshold(): number {
+		return this.partBreakThreshold;
+	}
+
+	get getTimesPartCanBeBroken(): number {
+		return this.timesPartCanBeBroken;
+	}
 
 	get getTimesPartHasBeenBroken(): number {
 		return this.timesPartHasBeenBroken;
+	}
+
+	get getDamageTaken(): number {
+		return this.damageTaken;
+	}
+
+	get getHitzones(): Array<Hitzone> {
+		return this.hitzones;
+	}
+
+	get getPartBreakNotifier(): PartBreakNotifier {
+		return this.partBreakNotifier;
 	}
 
 	private constructor(name: string, id: string, partBreakThreshold: number, timesPartCanBeBroken: number, timesPartHasBeenBroken: number, damageTaken: number, hitzones: Array<Hitzone>, partBreakNotifier: PartBreakNotifier) {
@@ -66,16 +89,7 @@ export class MonsterPart {
 			this.timesPartHasBeenBroken = 0;
 			this.damageTaken = 0;
 
-			this.hitzones = [];
-
-			Object.values(damageTypes).forEach(currentDamageType => {
-
-				const NEW_HITZONE: Hitzone = { type: currentDamageType, hitzoneModifier: 0, minimumDamage: 0 };
-
-				this.hitzones.push(NEW_HITZONE);
-
-			}
-			)
+			this.hitzones = generateDefaultHitzones();
 
 			this.partBreakNotifier = new PartBreakNotifier();
 
@@ -95,16 +109,7 @@ export class MonsterPart {
 			this.timesPartHasBeenBroken = 0;
 			this.damageTaken = 0;
 
-			this.hitzones = [];
-
-			Object.values(damageTypes).forEach(currentDamageType => {
-
-				const NEW_HITZONE: Hitzone = { type: currentDamageType, hitzoneModifier: 0, minimumDamage: 0 };
-
-				this.hitzones.push(NEW_HITZONE);
-
-			}
-			)
+			this.hitzones = generateDefaultHitzones();
 
 			this.partBreakNotifier = new PartBreakNotifier();
 
@@ -135,41 +140,7 @@ export class MonsterPart {
 		}
 
 		public setHitzones(hitzones: Array<Hitzone>) {
-
-			this.hitzones = [];
-
-			Object.values(damageTypes).forEach(currentDamageType => {
-
-				const HAS_HITZONE_OF_DAMAGE_TYPE = hitzones.filter((hitzone) => hitzone.type == currentDamageType).length > 0;
-				const HAS_MULTIPLE_HITZONES_OF_SAME_TYPE = hitzones.filter((hitzone) => hitzone.type == currentDamageType).length > 1;
-
-				if (!HAS_HITZONE_OF_DAMAGE_TYPE) {
-					console.log(`Given Array of Hitzones does not contain hitzone of type ${currentDamageType}`);
-					console.log(`Adding new Hitzone of type ${currentDamageType} with default values for Hitzone Modifier and Minimum Damage`);
-
-					const NEW_HITZONE: Hitzone = { type: currentDamageType, hitzoneModifier: 0, minimumDamage: 0 };
-
-					this.hitzones.push(NEW_HITZONE);
-					return;
-				}
-
-				if (HAS_MULTIPLE_HITZONES_OF_SAME_TYPE) {
-					const HITZONE = hitzones.filter((hitzone) => hitzone.type == currentDamageType).at(0);
-					console.log(`Given array contains multiple hitzones of type ${currentDamageType} values from the first instance in the array will be used and the rest will be ignored`);
-					console.log(`Adding new hitzone of type ${currentDamageType} with Hitzone Modifier ${HITZONE!.hitzoneModifier} and minimum damage of ${HITZONE!.minimumDamage}`)
-
-					const NEW_HITZONE: Hitzone = { type: currentDamageType, hitzoneModifier: HITZONE!.hitzoneModifier, minimumDamage: HITZONE!.minimumDamage };
-
-					this.hitzones.push(NEW_HITZONE);
-					return;
-				}
-
-				const HITZONE = hitzones.filter((hitzone) => hitzone.type == currentDamageType).at(0);
-				const NEW_HITZONE: Hitzone = { type: currentDamageType, hitzoneModifier: HITZONE!.hitzoneModifier, minimumDamage: HITZONE!.minimumDamage };
-				this.hitzones.push(NEW_HITZONE);
-
-			}
-			)
+			this.hitzones = generateHitzonesFromArray(hitzones);
 		}
 
 		public setPartBreakNotifier(partBreakNotifier: PartBreakNotifier) {
