@@ -6,7 +6,6 @@ describe("Monster Part Building", () => {
 		const PART = new MonsterPart.Builder().build();
 		const PROPERLY_BUILT_BASIC_MONSTER_PART = {
 			name: "Example Name",
-			id: "0000-0000-0000-0000",
 			partBreakThreshold: 0,
 			timesPartCanBeBroken: 0,
 			timesPartHasBeenBroken: 0,
@@ -14,7 +13,6 @@ describe("Monster Part Building", () => {
 
 		};
 		expect(PART.getName).toBe(PROPERLY_BUILT_BASIC_MONSTER_PART.name);
-		expect(PART.getId).toBe(PROPERLY_BUILT_BASIC_MONSTER_PART.id);
 		expect(PART.getPartBreakThreshold).toBe(PROPERLY_BUILT_BASIC_MONSTER_PART.partBreakThreshold);
 		expect(PART.getTimesPartCanBeBroken).toBe(PROPERLY_BUILT_BASIC_MONSTER_PART.timesPartCanBeBroken);
 		expect(PART.getTimesPartHasBeenBroken).toBe(PROPERLY_BUILT_BASIC_MONSTER_PART.timesPartHasBeenBroken);

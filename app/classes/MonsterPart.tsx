@@ -1,5 +1,6 @@
 import { damageTypes, Hitzone, generateHitzonesFromArray, generateDefaultHitzones } from "./Hitzone";
 import { PartBreakNotifier } from "./PartBreakNotifier";
+import uuid from "react-native-uuid";
 
 export class MonsterPart {
 
@@ -49,10 +50,10 @@ export class MonsterPart {
 		return this.partBreakNotifier;
 	}
 
-	private constructor(name: string, id: string, partBreakThreshold: number, timesPartCanBeBroken: number, timesPartHasBeenBroken: number, damageTaken: number, hitzones: Array<Hitzone>, partBreakNotifier: PartBreakNotifier) {
+	private constructor(name: string, partBreakThreshold: number, timesPartCanBeBroken: number, timesPartHasBeenBroken: number, damageTaken: number, hitzones: Array<Hitzone>, partBreakNotifier: PartBreakNotifier) {
 
 		this.name = name;
-		this.id = id;
+		this.id = uuid.v4();
 
 		this.partBreakThreshold = partBreakThreshold;
 		this.timesPartCanBeBroken = timesPartCanBeBroken;
@@ -69,7 +70,6 @@ export class MonsterPart {
 	public static Builder = class {
 
 		private name: string;
-		private id: string;
 
 		private partBreakThreshold: number;
 		private timesPartCanBeBroken: number;
@@ -82,7 +82,6 @@ export class MonsterPart {
 
 		constructor() {
 			this.name = "Example Name";
-			this.id = "0000-0000-0000-0000";
 
 			this.partBreakThreshold = 0;
 			this.timesPartCanBeBroken = 0;
@@ -102,7 +101,6 @@ export class MonsterPart {
 		public reset() {
 
 			this.name = "Example Name";
-			this.id = "0000-0000-0000-0000";
 
 			this.partBreakThreshold = 0;
 			this.timesPartCanBeBroken = 0;
@@ -117,10 +115,6 @@ export class MonsterPart {
 
 		public setName(name: string) {
 			this.name = name;
-		}
-
-		public setId(id: string) {
-			this.id = id;
 		}
 
 		public setPartBreakThreshold(partBreakThreshold: number) {
