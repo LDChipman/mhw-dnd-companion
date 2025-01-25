@@ -77,3 +77,11 @@ export function generateHitzone(type: damageTypes, modifier?: number, minimumDam
 
 	return { type: type, hitzoneModifier: modifier!, minimumDamage: minimumDamage! };
 }
+
+export function adjustDamageForHitzone(rawDamage: number, hitzone: Hitzone): number {
+
+	const ADJUSTED_DAMAGE = rawDamage + hitzone.hitzoneModifier;
+
+	return ADJUSTED_DAMAGE >= hitzone.minimumDamage ? ADJUSTED_DAMAGE : hitzone.minimumDamage;
+
+}

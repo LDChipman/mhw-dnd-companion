@@ -1,8 +1,9 @@
-import { Hitzone, damageTypes, generateDefaultHitzones, generateHitzone, generateHitzonesFromArray } from "@/app/classes/Hitzone";
+import { Hitzone, adjustDamageForHitzone, damageTypes, generateDefaultHitzones, generateHitzone, generateHitzonesFromArray } from "@/app/classes/Hitzone";
 
 describe("Hitzone Building", () => {
 
 	test("Generates Singular Hitzone Correctly", () => {
+
 		const FULL_HITZONE = generateHitzone(damageTypes.unholy, 3, 5);
 		const EMPTY_HITZONE = generateHitzone(damageTypes.sonic);
 		const HALF_EMPTY_HITZONE = generateHitzone(damageTypes.cold, 7);
@@ -18,9 +19,11 @@ describe("Hitzone Building", () => {
 		expect(HALF_EMPTY_HITZONE.type).toBe(damageTypes.cold);
 		expect(HALF_EMPTY_HITZONE.hitzoneModifier).toBe(7);
 		expect(HALF_EMPTY_HITZONE.minimumDamage).toBe(0);
+
 	});
 
 	test("Default Hitzones Generate Properly", () => {
+
 		const PROPERLY_GENERATED_DEFAULT_HITZONES: Array<Hitzone> = [
 			generateHitzone(damageTypes.bludgeoning),
 			generateHitzone(damageTypes.slashing),
@@ -37,9 +40,11 @@ describe("Hitzone Building", () => {
 			generateHitzone(damageTypes.unholy)];
 
 		expect(generateDefaultHitzones()).toEqual(PROPERLY_GENERATED_DEFAULT_HITZONES);
+
 	});
 
 	test("Array of Hitzones is properly generated when passed array containing multiple of the same type", () => {
+
 		const ARRAY_OF_HITZONES_TO_SET_MANUALLY: Array<Hitzone> = [generateHitzone(damageTypes.fire, 3, 1),
 		generateHitzone(damageTypes.fire, 53, -300)];
 
@@ -51,6 +56,7 @@ describe("Hitzone Building", () => {
 	});
 
 	test("Properly creates a hitzone when the builder is passed an incomplete list of hitzones", () => {
+
 		const ARRAY_OF_HITZONES_TO_SET_MANUALLY: Array<Hitzone> = [
 			generateHitzone(damageTypes.slashing, 8, 4),
 			generateHitzone(damageTypes.force, -2, 5),
@@ -67,6 +73,16 @@ describe("Hitzone Building", () => {
 		expect(HITZONES.filter((currentHitzone) => currentHitzone.type == damageTypes.holy).at(0)!.hitzoneModifier).toBe(30);
 		expect(HITZONES.filter((currentHitzone) => currentHitzone.type == damageTypes.holy).at(0)!.minimumDamage).toBe(-5);
 
-	})
+	});
+
+	test("Properly adjusts damage for a given hitzone", () => {
+
+		const HITZONE: Hitzone = generateHitzone(damageTypes.slashing, -3, 1);
+
+		expect(adjustDamageForHitzone(20, HITZONE)).toBe(20 - 3);
+		expect(adjustDamageForHitzone(2, HITZONE)).toBe(HITZONE.minimumDamage);
+
+	});
+
 
 })

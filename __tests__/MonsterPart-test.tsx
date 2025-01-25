@@ -1,4 +1,5 @@
 import { MonsterPart } from "@/app/classes/MonsterPart";
+import { Hitzone, damageTypes } from "@/app/classes/Hitzone";
 
 describe("Monster Part Building", () => {
 
