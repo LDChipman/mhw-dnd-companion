@@ -95,7 +95,7 @@ export class MonsterPart {
 		}
 
 		public build() {
-			return new MonsterPart(this.name, this.id, this.partBreakThreshold, this.timesPartCanBeBroken, this.timesPartHasBeenBroken, this.damageTaken, this.hitzones, this.partBreakNotifier);
+			return new MonsterPart(this.name, this.partBreakThreshold, this.timesPartCanBeBroken, this.timesPartHasBeenBroken, this.damageTaken, this.hitzones, this.partBreakNotifier);
 		}
 
 		public reset() {
