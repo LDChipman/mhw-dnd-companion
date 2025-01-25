@@ -1,123 +1,71 @@
-import { Hitzone, damageTypes, generateDefaultHitzones, generateHitzonesFromArray } from "@/app/classes/Hitzone";
+import { Hitzone, damageTypes, generateDefaultHitzones, generateHitzone, generateHitzonesFromArray } from "@/app/classes/Hitzone";
 
 describe("Hitzone Building", () => {
 
-	test("Default Hitzones Generate Properly", () => {
-		const PROPERLY_BUILT_HITZONES: Array<Hitzone> = [{
-			type: damageTypes.bludgeoning,
-			hitzoneModifier: 0,
-			minimumDamage: 0
-		},
-		{
-			type: damageTypes.slashing,
-			hitzoneModifier: 0,
-			minimumDamage: 0
-		},
-		{
-			type: damageTypes.piercing,
-			hitzoneModifier: 0,
-			minimumDamage: 0
-		},
-		{
-			type: damageTypes.fire,
-			hitzoneModifier: 0,
-			minimumDamage: 0
-		},
-		{
-			type: damageTypes.electricity,
-			hitzoneModifier: 0,
-			minimumDamage: 0
-		},
-		{
-			type: damageTypes.cold,
-			hitzoneModifier: 0,
-			minimumDamage: 0
-		},
-		{
-			type: damageTypes.acid,
-			hitzoneModifier: 0,
-			minimumDamage: 0
-		},
-		{
-			type: damageTypes.sonic,
-			hitzoneModifier: 0,
-			minimumDamage: 0
-		},
-		{
-			type: damageTypes.positive,
-			hitzoneModifier: 0,
-			minimumDamage: 0
-		},
-		{
-			type: damageTypes.negative,
-			hitzoneModifier: 0,
-			minimumDamage: 0
-		},
-		{
-			type: damageTypes.force,
-			hitzoneModifier: 0,
-			minimumDamage: 0
-		},
-		{
-			type: damageTypes.holy,
-			hitzoneModifier: 0,
-			minimumDamage: 0
-		},
-		{
-			type: damageTypes.unholy,
-			hitzoneModifier: 0,
-			minimumDamage: 0
-		}];
+	test("Generates Singular Hitzone Correctly", () => {
+		const FULL_HITZONE = generateHitzone(damageTypes.unholy, 3, 5);
+		const EMPTY_HITZONE = generateHitzone(damageTypes.sonic);
+		const HALF_EMPTY_HITZONE = generateHitzone(damageTypes.cold, 7);
 
-		expect(generateDefaultHitzones()).toEqual(PROPERLY_BUILT_HITZONES);
+		expect(FULL_HITZONE.type).toBe(damageTypes.unholy);
+		expect(FULL_HITZONE.hitzoneModifier).toBe(3);
+		expect(FULL_HITZONE.minimumDamage).toBe(5);
+
+		expect(EMPTY_HITZONE.type).toBe(damageTypes.sonic);
+		expect(EMPTY_HITZONE.hitzoneModifier).toBe(0);
+		expect(EMPTY_HITZONE.minimumDamage).toBe(0);
+
+		expect(HALF_EMPTY_HITZONE.type).toBe(damageTypes.cold);
+		expect(HALF_EMPTY_HITZONE.hitzoneModifier).toBe(7);
+		expect(HALF_EMPTY_HITZONE.minimumDamage).toBe(0);
+	});
+
+	test("Default Hitzones Generate Properly", () => {
+		const PROPERLY_GENERATED_DEFAULT_HITZONES: Array<Hitzone> = [
+			generateHitzone(damageTypes.bludgeoning),
+			generateHitzone(damageTypes.slashing),
+			generateHitzone(damageTypes.piercing),
+			generateHitzone(damageTypes.fire),
+			generateHitzone(damageTypes.electricity),
+			generateHitzone(damageTypes.cold),
+			generateHitzone(damageTypes.acid),
+			generateHitzone(damageTypes.sonic),
+			generateHitzone(damageTypes.positive),
+			generateHitzone(damageTypes.negative),
+			generateHitzone(damageTypes.force),
+			generateHitzone(damageTypes.holy),
+			generateHitzone(damageTypes.unholy)];
+
+		expect(generateDefaultHitzones()).toEqual(PROPERLY_GENERATED_DEFAULT_HITZONES);
 	});
 
 	test("Array of Hitzones is properly generated when passed array containing multiple of the same type", () => {
-		const ARRAY_OF_HITZONES_TO_SET_MANUALLY: Array<Hitzone> = [{
-			type: damageTypes.fire,
-			hitzoneModifier: 3,
-			minimumDamage: 1
-		},
-		{
-			type: damageTypes.fire,
-			hitzoneModifier: 53,
-			minimumDamage: -300
-		}];
+		const ARRAY_OF_HITZONES_TO_SET_MANUALLY: Array<Hitzone> = [generateHitzone(damageTypes.fire, 3, 1),
+		generateHitzone(damageTypes.fire, 53, -300)];
 
-		const hitzones = generateHitzonesFromArray(ARRAY_OF_HITZONES_TO_SET_MANUALLY);
+		const HITZONES = generateHitzonesFromArray(ARRAY_OF_HITZONES_TO_SET_MANUALLY);
 
-		expect(hitzones.filter((currentHitzone) => currentHitzone.type == damageTypes.fire).at(0)!.hitzoneModifier).toBe(3);
-		expect(hitzones.filter((currentHitzone) => currentHitzone.type == damageTypes.fire).at(0)!.minimumDamage).toBe(1);
+		expect(HITZONES.filter((currentHitzone) => currentHitzone.type == damageTypes.fire).at(0)!.hitzoneModifier).toBe(3);
+		expect(HITZONES.filter((currentHitzone) => currentHitzone.type == damageTypes.fire).at(0)!.minimumDamage).toBe(1);
 
 	});
 
 	test("Properly creates a hitzone when the builder is passed an incomplete list of hitzones", () => {
-		const ARRAY_OF_HITZONES_TO_SET_MANUALLY: Array<Hitzone> = [{
-			type: damageTypes.slashing,
-			hitzoneModifier: 8,
-			minimumDamage: 4
-		},
-		{
-			type: damageTypes.force,
-			hitzoneModifier: -2,
-			minimumDamage: 5
-		},
-		{
-			type: damageTypes.holy,
-			hitzoneModifier: 30,
-			minimumDamage: -5
-		}];
+		const ARRAY_OF_HITZONES_TO_SET_MANUALLY: Array<Hitzone> = [
+			generateHitzone(damageTypes.slashing, 8, 4),
+			generateHitzone(damageTypes.force, -2, 5),
+			generateHitzone(damageTypes.holy, 30, -5)];
 
-		const hitzones = generateHitzonesFromArray(ARRAY_OF_HITZONES_TO_SET_MANUALLY);
+		const HITZONES = generateHitzonesFromArray(ARRAY_OF_HITZONES_TO_SET_MANUALLY);
 
-		expect(hitzones.filter((currentHitzone) => currentHitzone.type == damageTypes.slashing).at(0)!.hitzoneModifier).toBe(8);
-		expect(hitzones.filter((currentHitzone) => currentHitzone.type == damageTypes.slashing).at(0)!.minimumDamage).toBe(4);
+		expect(HITZONES.filter((currentHitzone) => currentHitzone.type == damageTypes.slashing).at(0)!.hitzoneModifier).toBe(8);
+		expect(HITZONES.filter((currentHitzone) => currentHitzone.type == damageTypes.slashing).at(0)!.minimumDamage).toBe(4);
 
-		expect(hitzones.filter((currentHitzone) => currentHitzone.type == damageTypes.force).at(0)!.hitzoneModifier).toBe(-2);
-		expect(hitzones.filter((currentHitzone) => currentHitzone.type == damageTypes.force).at(0)!.minimumDamage).toBe(5);
+		expect(HITZONES.filter((currentHitzone) => currentHitzone.type == damageTypes.force).at(0)!.hitzoneModifier).toBe(-2);
+		expect(HITZONES.filter((currentHitzone) => currentHitzone.type == damageTypes.force).at(0)!.minimumDamage).toBe(5);
 
-		expect(hitzones.filter((currentHitzone) => currentHitzone.type == damageTypes.holy).at(0)!.hitzoneModifier).toBe(30);
-		expect(hitzones.filter((currentHitzone) => currentHitzone.type == damageTypes.holy).at(0)!.minimumDamage).toBe(-5);
+		expect(HITZONES.filter((currentHitzone) => currentHitzone.type == damageTypes.holy).at(0)!.hitzoneModifier).toBe(30);
+		expect(HITZONES.filter((currentHitzone) => currentHitzone.type == damageTypes.holy).at(0)!.minimumDamage).toBe(-5);
 
 	})
 

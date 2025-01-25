@@ -32,10 +32,7 @@ export function generateHitzonesFromArray(hitzones: Array<Hitzone>): Array<Hitzo
 			console.log(`Given Array of Hitzones does not contain hitzone of type ${currentDamageType}`);
 			console.log(`Adding new Hitzone of type ${currentDamageType} with default values for Hitzone Modifier and Minimum Damage`);
 
-			const NEW_HITZONE: Hitzone = { type: currentDamageType, hitzoneModifier: 0, minimumDamage: 0 };
-
-			newHitzones.push(NEW_HITZONE);
-			return;
+			return newHitzones.push(generateHitzone(currentDamageType));
 		}
 
 		if (HAS_MULTIPLE_HITZONES_OF_SAME_TYPE) {
@@ -43,15 +40,11 @@ export function generateHitzonesFromArray(hitzones: Array<Hitzone>): Array<Hitzo
 			console.log(`Given array contains multiple hitzones of type ${currentDamageType} values from the first instance in the array will be used and the rest will be ignored`);
 			console.log(`Adding new hitzone of type ${currentDamageType} with Hitzone Modifier ${HITZONE!.hitzoneModifier} and minimum damage of ${HITZONE!.minimumDamage}`)
 
-			const NEW_HITZONE: Hitzone = { type: currentDamageType, hitzoneModifier: HITZONE!.hitzoneModifier, minimumDamage: HITZONE!.minimumDamage };
-
-			newHitzones.push(NEW_HITZONE);
-			return;
+			return newHitzones.push(generateHitzone(currentDamageType, HITZONE!.hitzoneModifier, HITZONE!.minimumDamage));
 		}
 
 		const HITZONE = hitzones.filter((hitzone) => hitzone.type == currentDamageType).at(0);
-		const NEW_HITZONE: Hitzone = { type: currentDamageType, hitzoneModifier: HITZONE!.hitzoneModifier, minimumDamage: HITZONE!.minimumDamage };
-		newHitzones.push(NEW_HITZONE);
+		return newHitzones.push(generateHitzone(currentDamageType, HITZONE!.hitzoneModifier, HITZONE!.minimumDamage));
 
 	}
 	);
@@ -64,7 +57,7 @@ export function generateDefaultHitzones(): Array<Hitzone> {
 
 	Object.values(damageTypes).forEach(currentDamageType => {
 
-		const NEW_HITZONE: Hitzone = { type: currentDamageType, hitzoneModifier: 0, minimumDamage: 0 };
+		const NEW_HITZONE: Hitzone = generateHitzone(currentDamageType);
 
 		hitzones.push(NEW_HITZONE);
 
@@ -72,4 +65,15 @@ export function generateDefaultHitzones(): Array<Hitzone> {
 	);
 
 	return hitzones;
+}
+
+export function generateHitzone(type: damageTypes, modifier?: number, minimumDamage?: number): Hitzone {
+	if (modifier == undefined && minimumDamage == undefined) {
+		return { type: type, hitzoneModifier: 0, minimumDamage: 0 };
+	}
+	if (minimumDamage == undefined) {
+		return { type: type, hitzoneModifier: modifier!, minimumDamage: 0 };
+	}
+
+	return { type: type, hitzoneModifier: modifier!, minimumDamage: minimumDamage! };
 }

@@ -113,32 +113,39 @@ export class MonsterPart {
 
 		}
 
-		public setName(name: string) {
+		public setName(name: string): this {
 			this.name = name;
+			return this;
 		}
 
-		public setPartBreakThreshold(partBreakThreshold: number) {
+		public setPartBreakThreshold(partBreakThreshold: number): this {
 			this.partBreakThreshold = partBreakThreshold;
+			return this;
 		}
 
-		public setTimesPartCanBeBroken(timesPartCanBeBroken: number) {
+		public setTimesPartCanBeBroken(timesPartCanBeBroken: number): this {
 			this.timesPartCanBeBroken = timesPartCanBeBroken;
+			return this;
 		}
 
-		public setTimesPartHasBeenBroken(timesPartHasBeenBroken: number) {
+		public setTimesPartHasBeenBroken(timesPartHasBeenBroken: number): this {
 			this.timesPartHasBeenBroken = timesPartHasBeenBroken;
+			return this;
 		}
 
-		public setDamageTaken(damageTaken: number) {
+		public setDamageTaken(damageTaken: number): this {
 			this.damageTaken = damageTaken;
+			return this;
 		}
 
-		public setHitzones(hitzones: Array<Hitzone>) {
+		public setHitzones(hitzones: Array<Hitzone>): this {
 			this.hitzones = generateHitzonesFromArray(hitzones);
+			return this;
 		}
 
-		public setPartBreakNotifier(partBreakNotifier: PartBreakNotifier) {
+		public setPartBreakNotifier(partBreakNotifier: PartBreakNotifier): this {
 			this.partBreakNotifier = partBreakNotifier;
+			return this;
 		}
 
 	}
