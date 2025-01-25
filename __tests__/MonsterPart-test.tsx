@@ -1,5 +1,5 @@
 import { MonsterPart } from "@/app/classes/MonsterPart";
-import { Hitzone, damageTypes } from "@/app/classes/Hitzone";
+import { Hitzone, damageTypes, generateHitzonesFromArray, generateHitzone } from "@/app/classes/Hitzone";
 
 describe("Monster Part Building", () => {
 
@@ -38,7 +38,7 @@ describe("Monster Part Building", () => {
 			generateHitzone(damageTypes.holy, 45, 47),
 			generateHitzone(damageTypes.unholy, 49, 51)
 		]);
-		
+
 		const PART = new MonsterPart.Builder()
 			.setName("Test Name")
 			.setPartBreakThreshold(5)
@@ -46,27 +46,27 @@ describe("Monster Part Building", () => {
 			.setTimesPartCanBeBroken(13)
 			.setTimesPartHasBeenBroken(17)
 			.setDamageTaken(21)
-			.setHitzone(TEST_HITZONES)
+			.setHitzones(TEST_HITZONES)
 			.build();
 
 		expect(PART.getName).toBe("Test Name");
-		expect(PART.partBreakThreshold).toBe(5);
-		expect(PART.partBreakThresholdIncrease).toBe(8);
-		expect(PART.timesPartCanBeBroken).toBe(13);
-		expect(PART.timesPartHasBeenBroken).toBe(17);
-		expect(PART.damageTaken).toBe(21);
+		expect(PART.getPartBreakThreshold).toBe(5);
+		expect(PART.getPartBreakThresholdIncrease).toBe(8);
+		expect(PART.getTimesPartCanBeBroken).toBe(13);
+		expect(PART.getTimesPartHasBeenBroken).toBe(17);
+		expect(PART.getDamageTaken).toBe(21);
 		expect(PART.getHitzones).toEqual(TEST_HITZONES);
 	})
 
 	test("Properly applies damage to part", () => {
 		const PART = new MonsterPart.Builder()
 			.setPartBreakThreshold(20)
-			.setPartBreakThreshold(20)
+			.setPartBreakThresholdIncrease(20)
 			.setTimesPartCanBeBroken(3)
 			.build();
 
 		PART.applyDamageToPart(19);
-		
+
 		expect(PART.getDamageTaken).toBe(19);
 		expect(PART.getTimesPartHasBeenBroken).toBe(0);
 
