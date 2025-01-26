@@ -20,4 +20,31 @@ describe("Monster Part Building", () => {
 		expect(PART.getDamageTaken).toBe(PROPERLY_BUILT_BASIC_MONSTER_PART.damageTaken);
 	});
 
+	test("Properly applies damage to part", () => {
+		const PART = new MonsterPart.Builder()
+			.setPartBreakThreshold(20)
+			.setTimesPartCanBeBroken(3)
+			.build();
+
+		PART.applyDamageToPart(19);
+		
+		expect(PART.getDamageTaken()).toBe(19);
+		expect(PART.getTimesPartHasBeenBroken()).toBe(0);
+
+		PART.applyDamageToPart(1);
+
+		expect(PART.getDamageTaken()).toBe(20);
+		expect(PART.getTimesPartHasBeenBroken()).toBe(1);
+
+		PART.applyDamageToPart(60);
+
+		expect(PART.getDamageTaken()).toBe(80);
+		expect(PART.getTimesPartHasBeenBroken).toBe(3);
+
+		PART.applyDamageToPart(500);
+
+		expect(PART.getDamageTaken()).toBe(580);
+		expect(PART.getTimesPartHasBeenBroken).toBe(3);
+	});
+
 })
