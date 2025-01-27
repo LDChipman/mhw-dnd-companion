@@ -1,5 +1,5 @@
 import { MonsterPart } from "@/app/classes/MonsterPart";
-import { Hitzone, damageTypes, generateHitzonesFromArray, generateHitzone } from "@/app/classes/Hitzone";
+import { damageTypes, generateHitzonesFromArray, generateHitzone } from "@/app/classes/Hitzone";
 
 describe("Monster Part Building", () => {
 
