@@ -1,5 +1,17 @@
 import { MonsterPart } from "@/app/classes/MonsterPart";
-import { damageTypes, generateHitzonesFromArray, generateHitzone } from "@/app/classes/Hitzone";
+import { damageTypes, generateHitzonesFromArray, generateHitzone, Hitzone, adjustDamageForHitzone } from "@/app/classes/Hitzone";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+
+//Use to get a random number that can be any number between the negative of the number provided and the number provided
+export function getRandomIntWithNegatives(maxValue: number): number {
+	const MAX_DOUBLED = maxValue * 2;
+	return Math.floor((Math.random() * MAX_DOUBLED) - maxValue);
+}
+
+//Use to get a random number that can be any number from 0 to the number provided
+export function getRandomInt(maxValue: number): number {
+	return Math.floor(Math.random() * maxValue);
+}
 
 describe("Monster Part Building", () => {
 
@@ -85,5 +97,48 @@ describe("Monster Part Building", () => {
 		expect(PART.getDamageTaken).toBe(560);
 		expect(PART.getTimesPartHasBeenBroken).toBe(3);
 	});
+
+	test("Creation and Use of Monster Part", () => {
+		const PART_BREAK_THRESHOLD_AND_INCREASE = getRandomInt(20);
+		const TIMES_PART_CAN_BE_BROKEN = getRandomInt(10);
+		const HITZONE_MODIFIER = getRandomIntWithNegatives(100);
+		const HITZONE_MINIMUM = getRandomInt(10);
+		const HITZONE = generateHitzone(damageTypes.piercing, HITZONE_MODIFIER, HITZONE_MINIMUM);
+		const RAW_DAMAGE = getRandomInt(500);
+
+		const PART = new MonsterPart.Builder()
+			.setPartBreakThreshold(PART_BREAK_THRESHOLD_AND_INCREASE)
+			.setPartBreakThresholdIncrease(PART_BREAK_THRESHOLD_AND_INCREASE)
+			.setTimesPartCanBeBroken(TIMES_PART_CAN_BE_BROKEN)
+			.setHitzones([HITZONE])
+			.build();
+
+		const CURRENT_HITZONE = PART.getHitzones.filter((currentHitzone) => currentHitzone.type == damageTypes.piercing).at(0);
+
+		PART.applyDamageToPart(adjustDamageForHitzone(RAW_DAMAGE, CURRENT_HITZONE!));
+
+		if (RAW_DAMAGE + HITZONE_MODIFIER <= HITZONE_MINIMUM) {
+			expect(PART.getDamageTaken).toBe(HITZONE_MINIMUM);
+		} else {
+			expect(PART.getDamageTaken).toBe(RAW_DAMAGE + HITZONE_MODIFIER);
+		}
+
+		if (RAW_DAMAGE + HITZONE_MODIFIER >= PART_BREAK_THRESHOLD_AND_INCREASE) {
+			if (Math.floor(RAW_DAMAGE / PART_BREAK_THRESHOLD_AND_INCREASE) <= TIMES_PART_CAN_BE_BROKEN) {
+				expect(PART.getTimesPartHasBeenBroken).toBe(RAW_DAMAGE / PART_BREAK_THRESHOLD_AND_INCREASE);
+			} else {
+				expect(PART.getTimesPartHasBeenBroken).toBe(TIMES_PART_CAN_BE_BROKEN);
+			}
+		}
+
+		console.log("Part Break Threshold: " + PART_BREAK_THRESHOLD_AND_INCREASE);
+		console.log("Times Part Can Be Broken: " + TIMES_PART_CAN_BE_BROKEN);
+		console.log("Hitzone Modifier: " + HITZONE_MODIFIER);
+		console.log("Hitzone Minimum: " + HITZONE_MINIMUM);
+		console.log("Raw Damage: " + RAW_DAMAGE);
+		console.log("Damage Taken: " + PART.getDamageTaken);
+		console.log("Times Part Has Been Broken: " + PART.getTimesPartHasBeenBroken);
+
+	})
 
 })
