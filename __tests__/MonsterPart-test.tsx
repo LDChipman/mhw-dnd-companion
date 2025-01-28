@@ -1,6 +1,5 @@
 import { MonsterPart } from "@/app/classes/MonsterPart";
-import { damageTypes, generateHitzonesFromArray, generateHitzone, Hitzone, adjustDamageForHitzone } from "@/app/classes/Hitzone";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+import { damageTypes, generateHitzonesFromArray, generateHitzone, adjustDamageForHitzone } from "@/app/classes/Hitzone";
 
 //Use to get a random number that can be any number between the negative of the number provided and the number provided
 export function getRandomIntWithNegatives(maxValue: number): number {
