@@ -131,14 +131,6 @@ describe("Monster Part Building", () => {
 			}
 		}
 
-		console.log("Part Break Threshold: " + PART_BREAK_THRESHOLD_AND_INCREASE);
-		console.log("Times Part Can Be Broken: " + TIMES_PART_CAN_BE_BROKEN);
-		console.log("Hitzone Modifier: " + HITZONE_MODIFIER);
-		console.log("Hitzone Minimum: " + HITZONE_MINIMUM);
-		console.log("Raw Damage: " + RAW_DAMAGE);
-		console.log("Damage Taken: " + PART.getDamageTaken);
-		console.log("Times Part Has Been Broken: " + PART.getTimesPartHasBeenBroken);
-
 	})
 
 })
