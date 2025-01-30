@@ -14,6 +14,10 @@ export class PartBreakNotifier {
 		this.partBreakListeners = [];
 	}
 
+	get getListeners() {
+		return this.partBreakListeners;
+	}
+
 	public startListeningForPartBreaks(partBreakListener: PartBreakListener): void {
 
 		const LISTENER_ALREADY_IS_LISTENING = this.partBreakListeners.find((currentPartBreakListener) => partBreakListener.id == currentPartBreakListener.id);
@@ -36,7 +40,7 @@ export class PartBreakNotifier {
 			return;
 		}
 
-		this.partBreakListeners.splice(LISTENER_INDEX, LISTENER_INDEX);
+		this.partBreakListeners.splice(LISTENER_INDEX, 1);
 
 	}
 

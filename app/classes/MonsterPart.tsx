@@ -30,7 +30,7 @@ export class MonsterPart {
 	get getPartBreakThreshold(): number {
 		return this.partBreakThreshold;
 	}
-	
+
 	get getPartBreakThresholdIncrease(): number {
 		return this.partBreakThresholdIncrease;
 	}
@@ -88,9 +88,11 @@ export class MonsterPart {
 			this.timesPartHasBeenBroken += 1;
 			this.partBreakThreshold += this.partBreakThresholdIncrease;
 			this.partBreakNotifier.notify();
+			console.log(`${this.name} Broken`);
 			this.checkForPartBreak();
+			return;
 		}
-
+		console.log(`${this.getName} can't be broken anymore`);
 	}
 
 	//Use to construct new MonsterParts with guaranteed properly initialized fields
