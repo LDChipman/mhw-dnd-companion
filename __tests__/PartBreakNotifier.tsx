@@ -1,7 +1,22 @@
+import { MonsterAttack } from "@/app/classes/MonsterAttack";
+import { MonsterPart } from "@/app/classes/MonsterPart";
+
 describe("Part Break Notifier", () => {
 
-	test.todo("Properly adds new listeners");
+	test("Properly Adds and Removes Listeners", () => {
 
-	test.todo("Properly removes old listeners");
+		const ATTACK = new MonsterAttack("", [], []);
+		const PART = new MonsterPart.Builder()
+			.build();
+
+		PART.getPartBreakNotifier.startListeningForPartBreaks(ATTACK);
+
+		expect(PART.getPartBreakNotifier.getListeners).toHaveLength(1);
+
+		PART.getPartBreakNotifier.stopListeningForPartBreaks(ATTACK);
+
+		expect(PART.getPartBreakNotifier.getListeners).toHaveLength(0);
+
+	});
 
 })

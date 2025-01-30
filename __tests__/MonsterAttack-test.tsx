@@ -71,20 +71,4 @@ describe("Monster Attack", () => {
 
 	});
 
-	test("Monster Attack Properly Starts and Stops Listening for Part Breaks", () => {
-
-		const ATTACK = new MonsterAttack("", [], []);
-		const PART = new MonsterPart.Builder()
-			.build();
-
-		PART.getPartBreakNotifier.startListeningForPartBreaks(ATTACK);
-
-		expect(PART.getPartBreakNotifier.getListeners).toHaveLength(1);
-
-		PART.getPartBreakNotifier.stopListeningForPartBreaks(ATTACK);
-
-		expect(PART.getPartBreakNotifier.getListeners).toHaveLength(0);
-
-	});
-
 });
