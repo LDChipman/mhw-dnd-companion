@@ -35,6 +35,25 @@ export class MonsterAttack implements PartBreakListener {
 		return this.statesInWhichTheAttackIsUsable;
 	}
 
+	public addState(state: MonsterState): void {
+		if (this.statesInWhichTheAttackIsUsable.filter((currentState) => currentState.id == state.id).length != 0) {
+			console.log("This state is already stored in the attacks usable states.");
+			return;
+		}
+		this.statesInWhichTheAttackIsUsable.push(state);
+	}
+
+	public removeState(state: MonsterState): void {
+		const STATE_INDEX = this.statesInWhichTheAttackIsUsable.findIndex((currentState) => currentState.id == state.id);
+
+		if (STATE_INDEX == -1) {
+			console.log("This state is not part of this attacks usable states and therefore can't be removed");
+			return;
+		}
+
+		this.statesInWhichTheAttackIsUsable.splice(STATE_INDEX, 1);
+	}
+
 	public update(): void {
 		if (this.currentDescriptionIndex < this.descriptions.length - 1) {
 			this.currentDescriptionIndex++;
