@@ -55,8 +55,6 @@ describe("Monster Part Building", () => {
 			.setPartBreakThreshold(5)
 			.setPartBreakThresholdIncrease(8)
 			.setTimesPartCanBeBroken(13)
-			.setTimesPartHasBeenBroken(17)
-			.setDamageTaken(21)
 			.setHitzones(TEST_HITZONES)
 			.build();
 
@@ -64,8 +62,6 @@ describe("Monster Part Building", () => {
 		expect(PART.getPartBreakThreshold).toBe(5);
 		expect(PART.getPartBreakThresholdIncrease).toBe(8);
 		expect(PART.getTimesPartCanBeBroken).toBe(13);
-		expect(PART.getTimesPartHasBeenBroken).toBe(17);
-		expect(PART.getDamageTaken).toBe(21);
 		expect(PART.getHitzones).toEqual(TEST_HITZONES);
 	})
 
@@ -95,6 +91,7 @@ describe("Monster Part Building", () => {
 
 		expect(PART.getDamageTaken).toBe(560);
 		expect(PART.getTimesPartHasBeenBroken).toBe(3);
+
 	});
 
 	test("Creation and Use of Monster Part", () => {

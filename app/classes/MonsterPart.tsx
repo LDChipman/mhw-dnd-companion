@@ -55,7 +55,7 @@ export class MonsterPart {
 		return this.partBreakNotifier;
 	}
 
-	private constructor(name: string, partBreakThreshold: number, partBreakThresholdIncrease: number, timesPartCanBeBroken: number, timesPartHasBeenBroken: number, damageTaken: number, hitzones: Array<Hitzone>, partBreakNotifier: PartBreakNotifier) {
+	private constructor(name: string, partBreakThreshold: number, partBreakThresholdIncrease: number, timesPartCanBeBroken: number, hitzones: Array<Hitzone>) {
 
 		this.name = name;
 		this.id = uuid.v4();
@@ -63,12 +63,12 @@ export class MonsterPart {
 		this.partBreakThreshold = partBreakThreshold;
 		this.partBreakThresholdIncrease = partBreakThresholdIncrease;
 		this.timesPartCanBeBroken = timesPartCanBeBroken;
-		this.timesPartHasBeenBroken = timesPartHasBeenBroken;
-		this.damageTaken = damageTaken;
+		this.timesPartHasBeenBroken = 0;
+		this.damageTaken = 0;
 
 		this.hitzones = hitzones;
 
-		this.partBreakNotifier = partBreakNotifier;
+		this.partBreakNotifier = new PartBreakNotifier;
 
 	}
 
@@ -84,7 +84,13 @@ export class MonsterPart {
 	private checkForPartBreak(): void {
 
 		const PART_CAN_BE_BROKEN = this.timesPartHasBeenBroken < this.timesPartCanBeBroken;
-		if (PART_CAN_BE_BROKEN && this.damageTaken >= this.partBreakThreshold) {
+
+		if (!PART_CAN_BE_BROKEN) {
+			console.log(`${this.getName} can't be broken anymore`);
+			return;
+		}
+
+		if (this.damageTaken >= this.partBreakThreshold) {
 			this.timesPartHasBeenBroken += 1;
 			this.partBreakThreshold += this.partBreakThresholdIncrease;
 			this.partBreakNotifier.notify();
@@ -92,7 +98,6 @@ export class MonsterPart {
 			this.checkForPartBreak();
 			return;
 		}
-		console.log(`${this.getName} can't be broken anymore`);
 	}
 
 	//Use to construct new MonsterParts with guaranteed properly initialized fields
@@ -103,12 +108,8 @@ export class MonsterPart {
 		private partBreakThreshold: number;
 		private partBreakThresholdIncrease: number;
 		private timesPartCanBeBroken: number;
-		private timesPartHasBeenBroken: number;
-		private damageTaken: number;
 
 		private hitzones: Array<Hitzone>;
-
-		private partBreakNotifier: PartBreakNotifier;
 
 		constructor() {
 			this.name = "Example Name";
@@ -116,17 +117,13 @@ export class MonsterPart {
 			this.partBreakThreshold = 0;
 			this.partBreakThresholdIncrease = 0;
 			this.timesPartCanBeBroken = 0;
-			this.timesPartHasBeenBroken = 0;
-			this.damageTaken = 0;
 
 			this.hitzones = generateDefaultHitzones();
-
-			this.partBreakNotifier = new PartBreakNotifier();
 
 		}
 
 		public build() {
-			return new MonsterPart(this.name, this.partBreakThreshold, this.partBreakThresholdIncrease, this.timesPartCanBeBroken, this.timesPartHasBeenBroken, this.damageTaken, this.hitzones, this.partBreakNotifier);
+			return new MonsterPart(this.name, this.partBreakThreshold, this.partBreakThresholdIncrease, this.timesPartCanBeBroken, this.hitzones);
 		}
 
 		public reset() {
@@ -136,8 +133,6 @@ export class MonsterPart {
 			this.partBreakThreshold = 0;
 			this.partBreakThresholdIncrease = 0;
 			this.timesPartCanBeBroken = 0;
-			this.timesPartHasBeenBroken = 0;
-			this.damageTaken = 0;
 
 			this.hitzones = generateDefaultHitzones();
 
@@ -162,16 +157,6 @@ export class MonsterPart {
 
 		public setTimesPartCanBeBroken(timesPartCanBeBroken: number): this {
 			this.timesPartCanBeBroken = timesPartCanBeBroken;
-			return this;
-		}
-
-		public setTimesPartHasBeenBroken(timesPartHasBeenBroken: number): this {
-			this.timesPartHasBeenBroken = timesPartHasBeenBroken;
-			return this;
-		}
-
-		public setDamageTaken(damageTaken: number): this {
-			this.damageTaken = damageTaken;
 			return this;
 		}
 
