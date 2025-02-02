@@ -71,4 +71,30 @@ describe("Monster Attack", () => {
 
 	});
 
+	test("Properly Adds and Removes Usable States", () => {
+
+		const TEST_STATE = generateMonsterState("Test State 2");
+
+		const ATTACK = new MonsterAttack("Attack Name", [], [generateMonsterState("Test State 1")]);
+
+		expect(ATTACK.getUsableStates).toHaveLength(1);
+
+		ATTACK.addState(TEST_STATE);
+
+		expect(ATTACK.getUsableStates).toHaveLength(2);
+
+		ATTACK.addState(TEST_STATE);
+
+		expect(ATTACK.getUsableStates).toHaveLength(2);
+
+		ATTACK.removeState(TEST_STATE);
+
+		expect(ATTACK.getUsableStates).toHaveLength(1);
+
+		ATTACK.removeState(TEST_STATE);
+
+		expect(ATTACK.getUsableStates).toHaveLength(1);
+
+	})
+
 });

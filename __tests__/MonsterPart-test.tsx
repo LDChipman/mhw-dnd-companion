@@ -102,6 +102,8 @@ describe("Monster Part Building", () => {
 		const HITZONE = generateHitzone(damageTypes.piercing, HITZONE_MODIFIER, HITZONE_MINIMUM);
 		const RAW_DAMAGE = getRandomInt(500);
 
+		const ADJUSTED_DAMAGE = RAW_DAMAGE + HITZONE_MODIFIER;
+
 		const PART = new MonsterPart.Builder()
 			.setPartBreakThreshold(PART_BREAK_THRESHOLD_AND_INCREASE)
 			.setPartBreakThresholdIncrease(PART_BREAK_THRESHOLD_AND_INCREASE)
@@ -113,15 +115,15 @@ describe("Monster Part Building", () => {
 
 		PART.applyDamageToPart(adjustDamageForHitzone(RAW_DAMAGE, CURRENT_HITZONE!));
 
-		if (RAW_DAMAGE + HITZONE_MODIFIER <= HITZONE_MINIMUM) {
+		if (ADJUSTED_DAMAGE <= HITZONE_MINIMUM) {
 			expect(PART.getDamageTaken).toBe(HITZONE_MINIMUM);
 		} else {
-			expect(PART.getDamageTaken).toBe(RAW_DAMAGE + HITZONE_MODIFIER);
+			expect(PART.getDamageTaken).toBe(ADJUSTED_DAMAGE);
 		}
 
-		if (RAW_DAMAGE + HITZONE_MODIFIER >= PART_BREAK_THRESHOLD_AND_INCREASE) {
-			if (Math.floor(RAW_DAMAGE / PART_BREAK_THRESHOLD_AND_INCREASE) <= TIMES_PART_CAN_BE_BROKEN) {
-				expect(PART.getTimesPartHasBeenBroken).toBe(RAW_DAMAGE / PART_BREAK_THRESHOLD_AND_INCREASE);
+		if (ADJUSTED_DAMAGE >= PART_BREAK_THRESHOLD_AND_INCREASE) {
+			if (Math.floor(ADJUSTED_DAMAGE / PART_BREAK_THRESHOLD_AND_INCREASE) <= TIMES_PART_CAN_BE_BROKEN) {
+				expect(PART.getTimesPartHasBeenBroken).toBe(Math.floor(ADJUSTED_DAMAGE / PART_BREAK_THRESHOLD_AND_INCREASE));
 			} else {
 				expect(PART.getTimesPartHasBeenBroken).toBe(TIMES_PART_CAN_BE_BROKEN);
 			}
