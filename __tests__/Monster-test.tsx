@@ -5,6 +5,7 @@ import { generateMonsterState } from "@/app/classes/MonsterState";
 describe("Monster", () => {
 
 	test("Monster Properly Changes States", () => {
+
 		const ENERGY_LEVELS = [generateMonsterState("Normal"), generateMonsterState("Enraged"), generateMonsterState("Tired")];
 		const SPECIAL_STATES = [generateMonsterState("Flying"), generateMonsterState("Grounded")];
 		const ATTACKS: Array<MonsterAttack> = [];
@@ -42,9 +43,24 @@ describe("Monster", () => {
 
 	});
 
-	test.todo("Monster Properly Sets all of its Fields during instantiation");
+	test("Monster Properly Sets all of its Fields during instantiation", () => {
 
-	test.todo("Monster Properly Filters Its List of Attacks to currently usable attacks");
+		const NAME = "Name";
+		const ENERGY_LEVELS = [generateMonsterState("Normal"), generateMonsterState("Enraged"), generateMonsterState("Tired")];
+		const SPECIAL_STATES = [generateMonsterState("Flying"), generateMonsterState("Grounded")];
+		const ATTACKS: Array<MonsterAttack> = [new MonsterAttack("Bite", ["Deals 1d8+5 damage"], ENERGY_LEVELS.concat(SPECIAL_STATES))];
+		const PARTS: Array<MonsterPart> = [new MonsterPart.Builder().build()];
+
+		const MONSTER = new Monster(NAME, ENERGY_LEVELS, SPECIAL_STATES, ATTACKS, PARTS);
+
+		expect(MONSTER.getEnergyLevels).toBe(ENERGY_LEVELS);
+		expect(MONSTER.getSpecialStates).toBe(SPECIAL_STATES);
+		expect(MONSTER.getAttacks).toBe(ATTACKS);
+		expect(MONSTER.getParts).toBe(PARTS);
+
+	});
+
+	test.todo("Monster Properly Filters ItsNAMNAMEtacks to currently usable attacks");
 
 	test.todo("Monster Properly Changes States Upon Hitting Certain Health Thresholds");
 
