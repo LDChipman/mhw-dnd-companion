@@ -60,7 +60,25 @@ describe("Monster", () => {
 
 	});
 
-	test.todo("Monster Properly Filters ItsNAMNAMEtacks to currently usable attacks");
+	test("Monster Properly Filters Its Attacks to currently usable attacks", () => {
+
+		const NAME = "Name";
+		const ENERGY_LEVELS = [generateMonsterState("Normal"), generateMonsterState("Enraged"), generateMonsterState("Tired")];
+		const SPECIAL_STATES = [generateMonsterState("Flying"), generateMonsterState("Grounded")];
+
+		const ATTACKS: Array<MonsterAttack> = [];
+		ATTACKS.push(new MonsterAttack("Bite", ["Deals 1d8+5 piercing damage"], [ENERGY_LEVELS.at(0)!, SPECIAL_STATES.at(1)!]));
+		ATTACKS.push(new MonsterAttack("Wing Blast", ["Knocks all Medium and Smaller creatures back 15ft in a 20ft cone. DC 15 Strength check to resist, failing by 5 or more causes the target to fall prone", "Knocks all Medium and Smaller creatures back 10ft in a 15ft cone. DC 10 Strength check to resist, failing by 5 or more causes the target to fall prone"], [ENERGY_LEVELS.at(1)!, SPECIAL_STATES.at(0)!]));
+		ATTACKS.push(new MonsterAttack("Claw Swipe", ["Deals 1d6+5 slashing damage", "Deals 1d4+3 slashing damage"], [ENERGY_LEVELS.at(0)!, ENERGY_LEVELS.at(1)!, SPECIAL_STATES.at(1)!]))
+
+		const PARTS: Array<MonsterPart> = [new MonsterPart.Builder()
+			.build()];
+
+		const MONSTER = new Monster(NAME, ENERGY_LEVELS, SPECIAL_STATES, ATTACKS, PARTS);
+
+		expect(MONSTER.getUsableAttacks).toHaveLength(1);
+
+	});
 
 	test.todo("Monster Properly Changes States Upon Hitting Certain Health Thresholds");
 
