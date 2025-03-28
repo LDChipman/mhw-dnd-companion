@@ -60,7 +60,7 @@ describe("Monster", () => {
 
 	});
 
-	test("Monster Properly Filters Its Attacks to currently usable attacks", () => {
+	test("Monster Properly Filters Its Attacks to currently available attacks", () => {
 
 		const NAME = "Name";
 		const ENERGY_LEVELS = [generateMonsterState("Normal"), generateMonsterState("Enraged"), generateMonsterState("Tired")];
