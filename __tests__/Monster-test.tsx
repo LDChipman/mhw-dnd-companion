@@ -78,13 +78,31 @@ describe("Monster", () => {
 
 		expect(MONSTER.getAvailableAttacks).toHaveLength(1);
 
+		MONSTER.getAvailableAttacks.forEach((attack: MonsterAttack) => {
+
+			console.log(attack.getName);
+
+		});
+
 		MONSTER.setCurrentSpecialState(MONSTER.getSpecialStates.at(1));
 
 		expect(MONSTER.getAvailableAttacks).toHaveLength(2);
 
+		MONSTER.getAvailableAttacks.forEach((attack: MonsterAttack) => {
+
+			console.log(attack.getName);
+
+		});
+
 		MONSTER.setCurrentEnergyLevel(MONSTER.getEnergyLevels.at(1));
 
 		expect(MONSTER.getAvailableAttacks).toHaveLength(1);
+
+		MONSTER.getAvailableAttacks.forEach((attack: MonsterAttack) => {
+
+			console.log(attack.getName);
+
+		});
 
 	});
 
